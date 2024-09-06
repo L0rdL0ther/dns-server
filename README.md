@@ -33,6 +33,6 @@ Build project
 Start the server
 
 ```bash
-  ./main
+  sudo ./main
 ```
 

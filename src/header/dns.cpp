@@ -8,6 +8,8 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+
+#include "dnsEnum.h"
 #include "dnsRequestBody.h"
 
 
@@ -44,14 +46,14 @@ std::vector<uint8_t> DNS::CreateResponse::createResponse(
 
     auto addAnswerSection = [&responsePacket](const auto &section) {
         std::vector<uint8_t> rDataBytes;
-        switch (section.queryType) {
-            case DataType::A:
+        switch (static_cast<int>(section.queryType)) {
+            case static_cast<int>(DnsEnum::QueryType::A):
                 rDataBytes = ipToBytes(section.rData);
             break;
-            case DataType::CNAME:
+            case static_cast<int>(DnsEnum::QueryType::CNAME):
                 rDataBytes = domainToDnsFormat(section.rData);
             break;
-            case DataType::AAAA:
+            case static_cast<int>(DnsEnum::QueryType::AAAA):
                 rDataBytes = parseIPv6Address(section.rData);
             break;
         }
@@ -59,12 +61,12 @@ std::vector<uint8_t> DNS::CreateResponse::createResponse(
         responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
     };
 
+
     for (const auto &section: answerSection) {
         addDomainName(responsePacket, section.query);
-        addUint16(responsePacket, section.queryType);
-        addUint16(responsePacket, section.queryClass);
+        addUint16(responsePacket, static_cast<int>(section.queryType));
+        addUint16(responsePacket, static_cast<int>(section.queryClass));
         addUint32(responsePacket, section.ttl);
-
         addAnswerSection(section);
     }
 
@@ -74,70 +76,13 @@ std::vector<uint8_t> DNS::CreateResponse::createResponse(
         addUint16(responsePacket, section.queryClass);
         addUint16(responsePacket, section.priority);
         addUint32(responsePacket, section.ttl);
-
         addAnswerSection(section);
-
     }
 
 
 
     return responsePacket;
 }
-
-// std::vector<uint8_t> rDataBytes;
-// if ( section.queryType == DataType::A) {
-//     rDataBytes = ipToBytes(section.rData);
-// } else if (section.queryType == DataType::CNAME) {
-//     rDataBytes = domainToDnsFormat(section.rData);
-// } else if (section.queryType == DataType::AAAA) {
-//     std::stringstream ss(section.rData);
-//     std::string byte;
-//     while (std::getline(ss, byte, ':')) {
-//         auto word = static_cast<uint16_t>(std::stoi(byte, nullptr, 16));
-//         addUint16(rDataBytes, word);
-//     }
-//     if (rDataBytes.size() != 16) {
-//         throw std::invalid_argument("Invalid IPv6 address format");
-//     }
-// }
-//
-// addUint16(responsePacket, rDataBytes.size());
-// responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
-
-// // Question Section
-// addDomainName(responsePacket, requestBody.query);
-// addUint16(responsePacket, requestBody.queryType);
-// addUint16(responsePacket, requestBody.queryClass);
-//
-// // Answer Section
-// addDomainName(responsePacket, requestBody.query); // Name in the answer
-// addUint16(responsePacket, requestBody.queryType);
-// addUint16(responsePacket, requestBody.queryClass);
-// addUint32(responsePacket, ttl);
-//
-// // rData
-// std::vector<uint8_t> rDataBytes;
-// if (requestBody.queryType == DataType::A) {
-//     rDataBytes = ipToBytes(rData);
-// } else if (requestBody.queryType == DataType::CNAME) {
-//     rDataBytes = domainToDnsFormat(rData);
-// } else if (requestBody.queryType == DataType::AAAA) {
-//     std::stringstream ss(rData);
-//     std::string byte;
-//     while (std::getline(ss, byte, ':')) {
-//         auto word = static_cast<uint16_t>(std::stoi(byte, nullptr, 16));
-//         addUint16(rDataBytes, word);
-//     }
-//     if (rDataBytes.size() != 16) {
-//         throw std::invalid_argument("Invalid IPv6 address format");
-//     }
-// }
-//
-// // Add rData length and data
-// addUint16(responsePacket, rDataBytes.size());
-// responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
-//
-// std::cout << responsePacket.size() << std::endl;
 
 void DNS::CreateResponse::addDomainName(std::vector<uint8_t> &packet, const std::string &domain) {
     // Domain adını DNS formatına dönüştür

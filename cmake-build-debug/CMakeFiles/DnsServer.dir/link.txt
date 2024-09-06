@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/DnsServer.dir/src/main.cpp.o CMakeFiles/DnsServer.dir/src/header/dns.cpp.o -o DnsServer
