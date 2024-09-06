@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <cstring>
 #include <unistd.h>
+#include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -9,6 +10,71 @@
 
 #define PORT 53
 #define MAXLINE 1024
+
+
+// Hexadecimal veriyi ekrana yazdırma
+void printHex(const std::vector<uint8_t>& data) {
+    for (auto byte : data) {
+        printf("%02x ", byte);
+    }
+    std::cout << std::endl;
+}
+
+// DNS isteğini çözümleme
+void parseDNSRequest(const std::vector<uint8_t>& data) {
+    if (data.size() < 12) {
+        std::cerr << "Veri yetersiz!" << std::endl;
+        return;
+    }
+
+    // Transaction ID
+    uint16_t transactionID = (data[0] << 8) | data[1];
+    std::cout << "\nTransaction ID: 0x" << std::hex << transactionID << '\n';
+
+    // Flags
+    uint16_t flags = (data[2] << 8) | data[3];
+    std::cout << "Flags: 0x" << std::hex << flags << '\n';
+
+    // Questions
+    uint16_t questions = (data[4] << 8) | data[5];
+    std::cout << "Questions: " << std::dec << questions << '\n';
+
+    // Answer RRs
+    uint16_t answerRRs = (data[6] << 8) | data[7];
+    std::cout << "Answer RRs: " << std::dec << answerRRs <<'\n';
+
+    // Authority RRs
+    uint16_t authorityRRs = (data[8] << 8) | data[9];
+    std::cout << "Authority RRs: " << std::dec << authorityRRs <<'\n';
+
+    // Additional RRs
+    uint16_t additionalRRs = (data[10] << 8) | data[11];
+    std::cout << "Additional RRs: " << std::dec << additionalRRs << '\n';
+
+    // Sorgu kısmı
+    size_t index = 12;
+    std::cout << "Query: ";
+    while (data[index] != 0) {
+        uint8_t length = data[index];
+        index++;
+        for (int i = 0; i < length; ++i) {
+            std::cout << (char)data[index + i];
+        }
+        index += length;
+        if (data[index] != 0) std::cout << ".";
+    }
+    index++; // Null byte
+    std::cout << '\n';
+
+    // Query Type
+    uint16_t queryType = (data[index] << 8) | data[index + 1];
+    std::cout << "Query Type: 0x" << std::hex << queryType << '\n';
+    index += 2;
+
+    // Query Class
+    uint16_t queryClass = (data[index] << 8) | data[index + 1];
+    std::cout << "Query Class: 0x" << std::hex << queryClass << '\n';
+}
 
 void create_dns_response(const char* request, char* response, int& response_length) {
     // Extract Transaction ID from request
@@ -75,7 +141,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "DNS Server listening on port 53" << std::endl;
+    std::cout << "DNS Server listening on port 53" << '\n';
 
     while (true) {
         socklen_t len = sizeof(client_addr);
@@ -85,15 +151,18 @@ int main() {
             continue;
         }
 
-        std::cout << "Received DNS request from client" << std::endl;
+        std::cout << "Received DNS request from client" << '\n';
 
         // Print received request (for debugging)
-        std::cout << "DNS Request Content:" << std::endl;
+        std::cout << "DNS Request Content:" << '\n';
         for (int i = 0; i < n; i++) {
             std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)(unsigned char)buffer[i] << " ";
-            if ((i + 1) % 16 == 0) std::cout << std::endl;
+            if ((i + 1) % 16 == 0) std::cout << '\n';
         }
-        std::cout << std::dec << std::endl;
+
+        parseDNSRequest(std::vector<uint8_t>(buffer, buffer + n));
+
+        std::cout << std::dec << '\n';
 
         // Prepare DNS response
         char response[MAXLINE];
@@ -101,16 +170,16 @@ int main() {
         create_dns_response(buffer, response, response_length);
 
         // Print the response for debugging
-        std::cout << "DNS Response Content:" << std::endl;
+        std::cout << "DNS Response Content:" << '\n';
         for (int i = 0; i < response_length; i++) {
             std::cout << std::hex << std::setw(2) << std::setfill('0') << (int)(unsigned char)response[i] << " ";
-            if ((i + 1) % 16 == 0) std::cout << std::endl;
+            if ((i + 1) % 16 == 0) std::cout << '\n';
         }
-        std::cout << std::dec << std::endl;
+        std::cout << std::dec << '\n';
 
         // Send DNS response
         sendto(sockfd, response, response_length, MSG_CONFIRM, (const struct sockaddr*)&client_addr, len);
-        std::cout << "DNS response sent to client" << std::endl;
+        std::cout << "DNS response sent to client" << '\n';
     }
 
     close(sockfd);
