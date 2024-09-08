@@ -1,9 +1,6 @@
-//
-// Created by yusuf on 9/5/24.
-//
-
 #include "dns.h"
 
+#include <cstring>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -15,93 +12,86 @@
 
 std::vector<uint8_t> DNS::CreateResponse::createResponse(
     uint16_t flags,
-    const std::pmr::list<AnswerSectionWithPriority> &answerWithPriority,
     const std::pmr::list<AnswerSection> &answerSection,
     const std::pmr::list<QuestionSection> &questions_section,
     const DnsRequestBody &requestBody
 ) {
-    std::vector<uint8_t> responsePacket;
+    uint16_t answerCount = answerSection.size();
+    std::vector<uint8_t> responsePacket = createBody(requestBody, questions_section, flags, answerCount);
 
-    uint16_t answerCount = 0;
-    if (!answerWithPriority.empty()) {
-        answerCount += answerWithPriority.size();
-    }
-    if (!answerSection.empty()) {
-        answerCount += answerSection.size();
-    }
-
-    // Header
-    addUint16(responsePacket, requestBody.transactionID);
-    addUint16(responsePacket, flags);
-    addUint16(responsePacket, questions_section.size());
-    addUint16(responsePacket, answerCount);
-    addUint16(responsePacket, requestBody.authorityRRs);
-    addUint16(responsePacket, requestBody.additionalRRs);
-
-    for (const auto &section: questions_section) {
-        addDomainName(responsePacket, section.query);
-        addUint16(responsePacket, section.type);
-        addUint16(responsePacket, section.type);
-    }
-
-    auto addAnswerSection = [&responsePacket](const auto &section) {
-        std::vector<uint8_t> rDataBytes;
-        switch (static_cast<int>(section.queryType)) {
-            case static_cast<int>(DnsEnum::QueryType::A):
-                rDataBytes = ipToBytes(section.rData);
-            break;
-            case static_cast<int>(DnsEnum::QueryType::CNAME):
-                rDataBytes = domainToDnsFormat(section.rData);
-            break;
-            case static_cast<int>(DnsEnum::QueryType::AAAA):
-                rDataBytes = parseIPv6Address(section.rData);
-            break;
-        }
-        addUint16(responsePacket, rDataBytes.size());
-        responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
-    };
-
-
+    // Answer Section
     for (const auto &section: answerSection) {
         addDomainName(responsePacket, section.query);
         addUint16(responsePacket, static_cast<int>(section.queryType));
         addUint16(responsePacket, static_cast<int>(section.queryClass));
         addUint32(responsePacket, section.ttl);
-        addAnswerSection(section);
+
+        std::vector<uint8_t> rDataBytes;
+        switch (static_cast<int>(section.queryType)) {
+            case static_cast<int>(DnsEnum::QueryType::A):
+                rDataBytes = ipToBytes(section.rData);
+                break;
+            case static_cast<int>(DnsEnum::QueryType::CNAME):
+                rDataBytes = domainToDnsFormat(section.rData);
+                break;
+            case static_cast<int>(DnsEnum::QueryType::AAAA):
+                rDataBytes = parseIPv6Address(section.rData);
+                break;
+            case static_cast<int>(DnsEnum::QueryType::MX):
+                rDataBytes = domainToDnsFormat(section.rData);
+                break;
+        }
+        addUint16(responsePacket, rDataBytes.size());
+        responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
     }
 
-    for (const auto &section: answerWithPriority) {
-        addDomainName(responsePacket, section.query);
-        addUint16(responsePacket, section.queryType);
-        addUint16(responsePacket, section.queryClass);
-        addUint16(responsePacket, section.priority);
-        addUint32(responsePacket, section.ttl);
-        addAnswerSection(section);
-    }
-
-
+    // MX Specific Answer Section
 
     return responsePacket;
 }
 
-void DNS::CreateResponse::addDomainName(std::vector<uint8_t> &packet, const std::string &domain) {
-    // Domain adını DNS formatına dönüştür
-    std::vector<std::string> labels;
-    size_t start = 0, end;
-    while ((end = domain.find('.', start)) != std::string::npos) {
-        labels.push_back(domain.substr(start, end - start));
-        start = end + 1;
-    }
-    labels.push_back(domain.substr(start));
+std::vector<uint8_t> DNS::CreateResponse::createMxResponse(
+    uint16_t flags,
+    const std::pmr::list<AnswerSectionWithPriority> &answerWithPriority,
+    const std::pmr::list<QuestionSection> &questions_section, const DnsRequestBody &requestBody) {
 
-    for (const auto &label: labels) {
-        if (label.empty() || label.size() > 63) {
-            throw std::runtime_error("Invalid domain label length");
-        }
-        packet.push_back(label.size());
-        packet.insert(packet.end(), label.begin(), label.end());
+    uint16_t answerCount = answerWithPriority.size();
+    std::vector<uint8_t> responsePacket = createBody(requestBody, questions_section, flags, answerCount);
+
+    for (const auto &section: answerWithPriority) {
+        addDomainName(responsePacket, section.query); // Domain name of the mail exchanger
+        addUint16(responsePacket, static_cast<int>(DnsEnum::QueryType::MX)); // MX type
+        addUint16(responsePacket, static_cast<int>(DnsEnum::QueryClass::IN)); // Class IN
+        addUint32(responsePacket, section.ttl); // TTL
+
+        std::vector<uint8_t> rDataBytes;
+        addUint16(rDataBytes, section.priority); // Priority
+
+        std::vector<uint8_t> domainBytes = domainToDnsFormat(section.rData); // Mail exchanger domain
+        rDataBytes.insert(rDataBytes.end(), domainBytes.begin(), domainBytes.end());
+
+        addUint16(responsePacket, rDataBytes.size()); // Length field for MX record
+        responsePacket.insert(responsePacket.end(), rDataBytes.begin(), rDataBytes.end());
     }
-    packet.push_back(0);
+    return responsePacket;
+}
+
+void DNS::CreateResponse::addDomainName(std::vector<uint8_t> &packet, const std::string &domain) {
+    size_t pos = 0;
+    while (pos < domain.size()) {
+        size_t end = domain.find('.', pos);
+        if (end == std::string::npos) {
+            end = domain.size();
+        }
+        size_t labelLength = end - pos;
+        if (labelLength > 63) {
+            throw std::runtime_error("Label length exceeds 63 bytes");
+        }
+        packet.push_back(static_cast<uint8_t>(labelLength));
+        packet.insert(packet.end(), domain.begin() + pos, domain.begin() + end);
+        pos = end + 1;
+    }
+    packet.push_back(0x00); // End of domain name
 }
 
 std::vector<uint8_t> DNS::CreateResponse::domainToDnsFormat(const std::string &domain) {
@@ -144,6 +134,13 @@ std::string DNS::Log::bytesToHex(const std::vector<uint8_t> &bytes) {
     return ss.str();
 }
 
+std::string DNS::Log::bytesToHex(const std::vector<uint16_t> &bytes) {
+    std::stringstream ss;
+    for (auto byte: bytes) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte) << " ";
+    }
+    return ss.str();
+}
 
 std::vector<uint8_t> DNS::CreateResponse::ipToBytes(const std::string &ipAddress) {
     std::vector<uint8_t> bytes;
@@ -179,6 +176,29 @@ std::vector<uint8_t> DNS::CreateResponse::parseIPv6Address(const std::string &ip
     return rDataBytes;
 }
 
+std::vector<uint8_t> DNS::CreateResponse::createBody(
+    const DnsRequestBody &requestBody,
+    const std::pmr::list<QuestionSection> &questions_section,
+    uint16_t flags,
+    uint16_t answerCount
+) {
+    std::vector<uint8_t> responsePacket;
+    addUint16(responsePacket, requestBody.transactionID); // Transaction ID
+    addUint16(responsePacket, flags); // Flags
+    addUint16(responsePacket, questions_section.size()); // Number of Questions
+    addUint16(responsePacket, answerCount); // Number of Answer RRs
+    addUint16(responsePacket, requestBody.authorityRRs); // Number of Authority RRs
+    addUint16(responsePacket, requestBody.additionalRRs); // Number of Additional RRs
+
+    // Questions Section
+    for (const auto &section: questions_section) {
+        addDomainName(responsePacket, section.query);
+        addUint16(responsePacket, section.type);
+        addUint16(responsePacket, section.queryClass);
+    }
+
+    return responsePacket;
+}
 
 DnsRequestBody DNS::ParseResponse::parseDnsRequest(const std::vector<uint8_t> &data) {
     DnsRequestBody body;
@@ -193,17 +213,17 @@ DnsRequestBody DNS::ParseResponse::parseDnsRequest(const std::vector<uint8_t> &d
     body.questions = (data[4] << 8) | data[5];
     body.answerRRs = (data[6] << 8) | data[7];
     body.authorityRRs = (data[8] << 8) | data[9];
-    body.additionalRRs = (data[10] << 8) | data[11];;
+    body.additionalRRs = (data[10] << 8) | data[11];
 
     uint16_t questionCount = body.questions;
     size_t queryStartIndex = 12;
     while (questionCount > 0) {
         std::string query;
         while (data[queryStartIndex] != 0) {
-            uint8_t lenght = data[queryStartIndex];
+            uint8_t length = data[queryStartIndex];
             queryStartIndex++;
-            query += std::string(data.begin() + queryStartIndex, data.begin() + queryStartIndex + lenght);
-            queryStartIndex = queryStartIndex + lenght;
+            query += std::string(data.begin() + queryStartIndex, data.begin() + queryStartIndex + length);
+            queryStartIndex = queryStartIndex + length;
             if (data[queryStartIndex] != 0) query += ".";
         }
         queryStartIndex++;
@@ -215,4 +235,21 @@ DnsRequestBody DNS::ParseResponse::parseDnsRequest(const std::vector<uint8_t> &d
     }
 
     return body;
+}
+
+void DNS::ParseResponse::splitDomain(const std::string &domain, std::string &subdomain, std::string &mainDomain) {
+    size_t pos = domain.rfind('.');
+    if (pos != std::string::npos) {
+        size_t secondLastDot = domain.rfind('.', pos - 1);
+        if (secondLastDot != std::string::npos) {
+            subdomain = domain.substr(0, secondLastDot);
+            mainDomain = domain.substr(secondLastDot + 1);
+        } else {
+            subdomain = "";
+            mainDomain = domain;
+        }
+    } else {
+        subdomain = "";
+        mainDomain = domain;
+    }
 }

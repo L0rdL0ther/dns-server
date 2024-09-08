@@ -108,6 +108,9 @@ DnsServer_EXTERNAL_OBJECTS =
 DnsServer: CMakeFiles/DnsServer.dir/src/main.cpp.o
 DnsServer: CMakeFiles/DnsServer.dir/src/header/dns.cpp.o
 DnsServer: CMakeFiles/DnsServer.dir/build.make
+DnsServer: /usr/lib/libboost_system.so.1.86.0
+DnsServer: /usr/lib/libssl.so
+DnsServer: /usr/lib/libcrypto.so
 DnsServer: CMakeFiles/DnsServer.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/yusuf/CLionProjects/BasicDnsServer/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable DnsServer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/DnsServer.dir/link.txt --verbose=$(VERBOSE)

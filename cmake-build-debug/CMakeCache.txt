@@ -14,6 +14,14 @@
 # EXTERNAL cache entries
 ########################
 
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=/usr/lib/cmake/Boost-1.86.0
+
+//Path to a file.
+Boost_INCLUDE_DIR:PATH=/usr/include
+
+Boost_SYSTEM_LIBRARY_RELEASE:STRING=/usr/lib/libboost_system.so.1.86.0
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 
@@ -141,6 +149,9 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 //Path to a program.
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
+//Path to installed libraries
+CMAKE_PREFIX_PATH:PATH=/usr/local
+
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
 
@@ -224,11 +235,43 @@ DnsServer_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 DnsServer_SOURCE_DIR:STATIC=/home/yusuf/CLionProjects/BasicDnsServer
 
+//Path to a library.
+OPENSSL_CRYPTO_LIBRARY:FILEPATH=/usr/lib/libcrypto.so
+
+//Path to a file.
+OPENSSL_INCLUDE_DIR:PATH=/usr/include
+
+//Path to a library.
+OPENSSL_SSL_LIBRARY:FILEPATH=/usr/lib/libssl.so
+
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=/usr/bin/pkg-config
+
+//The directory containing a CMake configuration file for boost_headers.
+boost_headers_DIR:PATH=/usr/lib/cmake/boost_headers-1.86.0
+
+//The directory containing a CMake configuration file for boost_system.
+boost_system_DIR:PATH=/usr/lib/cmake/boost_system-1.86.0
+
+//Path to a library.
+pkgcfg_lib_PQXX_pqxx:FILEPATH=/usr/lib/libpqxx.so
+
+//Path to a library.
+pkgcfg_lib__OPENSSL_crypto:FILEPATH=/usr/lib/libcrypto.so
+
+//Path to a library.
+pkgcfg_lib__OPENSSL_ssl:FILEPATH=/usr/lib/libssl.so
+
 
 ########################
 # INTERNAL cache entries
 ########################
 
+//ADVANCED property for variable: Boost_DIR
+Boost_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_ADDR2LINE
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
@@ -372,6 +415,106 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding Boost
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/cmake/Boost-1.86.0/BoostConfig.cmake][cfound components: system ][v1.86.0()]
+//Details about finding OpenSSL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenSSL:INTERNAL=[/usr/lib/libcrypto.so][/usr/include][c ][v3.3.1()]
+//Details about finding PkgConfig
+FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v2.1.1()]
+//ADVANCED property for variable: OPENSSL_CRYPTO_LIBRARY
+OPENSSL_CRYPTO_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENSSL_INCLUDE_DIR
+OPENSSL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENSSL_SSL_LIBRARY
+OPENSSL_SSL_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+PQXX_CFLAGS:INTERNAL=-I/usr/include
+PQXX_CFLAGS_I:INTERNAL=
+PQXX_CFLAGS_OTHER:INTERNAL=
+PQXX_FOUND:INTERNAL=1
+PQXX_INCLUDEDIR:INTERNAL=/usr/include
+PQXX_INCLUDE_DIRS:INTERNAL=/usr/include
+PQXX_LDFLAGS:INTERNAL=-L/usr/lib;-lpqxx
+PQXX_LDFLAGS_OTHER:INTERNAL=
+PQXX_LIBDIR:INTERNAL=/usr/lib
+PQXX_LIBRARIES:INTERNAL=pqxx
+PQXX_LIBRARY_DIRS:INTERNAL=/usr/lib
+PQXX_LIBS:INTERNAL=
+PQXX_LIBS_L:INTERNAL=
+PQXX_LIBS_OTHER:INTERNAL=
+PQXX_LIBS_PATHS:INTERNAL=
+PQXX_MODULE_NAME:INTERNAL=libpqxx
+PQXX_PREFIX:INTERNAL=/usr
+PQXX_STATIC_CFLAGS:INTERNAL=-I/usr/include
+PQXX_STATIC_CFLAGS_I:INTERNAL=
+PQXX_STATIC_CFLAGS_OTHER:INTERNAL=
+PQXX_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
+PQXX_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lpqxx
+PQXX_STATIC_LDFLAGS_OTHER:INTERNAL=
+PQXX_STATIC_LIBDIR:INTERNAL=
+PQXX_STATIC_LIBRARIES:INTERNAL=pqxx
+PQXX_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib
+PQXX_STATIC_LIBS:INTERNAL=
+PQXX_STATIC_LIBS_L:INTERNAL=
+PQXX_STATIC_LIBS_OTHER:INTERNAL=
+PQXX_STATIC_LIBS_PATHS:INTERNAL=
+PQXX_VERSION:INTERNAL=7.9.0
+PQXX_libpqxx_INCLUDEDIR:INTERNAL=
+PQXX_libpqxx_LIBDIR:INTERNAL=
+PQXX_libpqxx_PREFIX:INTERNAL=
+PQXX_libpqxx_VERSION:INTERNAL=
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
+_OPENSSL_CFLAGS:INTERNAL=-I/usr/include
+_OPENSSL_CFLAGS_I:INTERNAL=
+_OPENSSL_CFLAGS_OTHER:INTERNAL=
+_OPENSSL_FOUND:INTERNAL=1
+_OPENSSL_INCLUDEDIR:INTERNAL=/usr/include
+_OPENSSL_INCLUDE_DIRS:INTERNAL=/usr/include
+_OPENSSL_LDFLAGS:INTERNAL=-L/usr/lib;-lssl;-lcrypto
+_OPENSSL_LDFLAGS_OTHER:INTERNAL=
+_OPENSSL_LIBDIR:INTERNAL=/usr/lib
+_OPENSSL_LIBRARIES:INTERNAL=ssl;crypto
+_OPENSSL_LIBRARY_DIRS:INTERNAL=/usr/lib
+_OPENSSL_LIBS:INTERNAL=
+_OPENSSL_LIBS_L:INTERNAL=
+_OPENSSL_LIBS_OTHER:INTERNAL=
+_OPENSSL_LIBS_PATHS:INTERNAL=
+_OPENSSL_MODULE_NAME:INTERNAL=openssl
+_OPENSSL_PREFIX:INTERNAL=
+_OPENSSL_STATIC_CFLAGS:INTERNAL=-I/usr/include
+_OPENSSL_STATIC_CFLAGS_I:INTERNAL=
+_OPENSSL_STATIC_CFLAGS_OTHER:INTERNAL=
+_OPENSSL_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
+_OPENSSL_STATIC_LDFLAGS:INTERNAL=-L/usr/lib;-lssl;-lcrypto;-ldl;-pthread;-L/usr/lib;-lcrypto;-ldl;-pthread
+_OPENSSL_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread;-pthread
+_OPENSSL_STATIC_LIBDIR:INTERNAL=
+_OPENSSL_STATIC_LIBRARIES:INTERNAL=ssl;crypto;dl;crypto;dl
+_OPENSSL_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib;/usr/lib
+_OPENSSL_STATIC_LIBS:INTERNAL=
+_OPENSSL_STATIC_LIBS_L:INTERNAL=
+_OPENSSL_STATIC_LIBS_OTHER:INTERNAL=
+_OPENSSL_STATIC_LIBS_PATHS:INTERNAL=
+_OPENSSL_VERSION:INTERNAL=3.3.1
+_OPENSSL_openssl_INCLUDEDIR:INTERNAL=
+_OPENSSL_openssl_LIBDIR:INTERNAL=
+_OPENSSL_openssl_PREFIX:INTERNAL=
+_OPENSSL_openssl_VERSION:INTERNAL=
+__pkg_config_arguments__OPENSSL:INTERNAL=QUIET;openssl
+__pkg_config_checked_PQXX:INTERNAL=1
+__pkg_config_checked__OPENSSL:INTERNAL=1
+//ADVANCED property for variable: boost_headers_DIR
+boost_headers_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: boost_system_DIR
+boost_system_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_PQXX_pqxx
+pkgcfg_lib_PQXX_pqxx-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib__OPENSSL_crypto
+pkgcfg_lib__OPENSSL_crypto-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib__OPENSSL_ssl
+pkgcfg_lib__OPENSSL_ssl-ADVANCED:INTERNAL=1
+prefix_result:INTERNAL=/usr/lib
 

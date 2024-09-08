@@ -35,12 +35,18 @@ public:
 
 class AnswerSectionWithPriority {
 public:
+
     std::string query;
-    uint16_t queryType;
-    uint16_t queryClass;
+    DNS::DnsEnum::QueryType queryType;
+    DNS::DnsEnum::QueryClass queryClass;
     uint16_t priority;
     uint32_t ttl;
     std::string rData;
+
+    AnswerSectionWithPriority(std::string q, DNS::DnsEnum::QueryType qType, DNS::DnsEnum::QueryClass qClass, uint16_t priority, uint32_t timeToLive, std::string data)
+        : query(std::move(q)), queryType(qType), queryClass(qClass), priority(priority), ttl(timeToLive), rData(std::move(data)) {}
+
+
 };
 
 

@@ -27,7 +27,7 @@ Go to the project directory
 Build project
 
 ```bash
-  g++ -o main main.cpp  
+  g++ -std=c++17 -o Cri_DnsServer src/main.cpp src/header/dns.cpp
 ```
 
 Start the server

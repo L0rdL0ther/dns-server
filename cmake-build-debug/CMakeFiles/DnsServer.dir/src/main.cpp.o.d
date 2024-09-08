@@ -223,4 +223,84 @@ CMakeFiles/DnsServer.dir/src/main.cpp.o: \
  /usr/include/bits/types/struct_osockaddr.h /usr/include/arpa/inet.h \
  /usr/include/netinet/in.h /usr/include/bits/in.h \
  /home/yusuf/CLionProjects/BasicDnsServer/src/header/dnsRequestBody.h \
- /home/yusuf/CLionProjects/BasicDnsServer/src/header/dnsEnum.h
+ /home/yusuf/CLionProjects/BasicDnsServer/src/database/postegre.h \
+ /usr/include/pqxx/pqxx /usr/include/pqxx/internal/header-pre.hxx \
+ /usr/include/c++/14.2.1/version \
+ /usr/include/pqxx/config-public-compiler.h /usr/include/pqxx/array.hxx \
+ /usr/include/c++/14.2.1/algorithm \
+ /usr/include/c++/14.2.1/bits/stl_algo.h \
+ /usr/include/c++/14.2.1/bits/algorithmfwd.h \
+ /usr/include/c++/14.2.1/bits/stl_heap.h \
+ /usr/include/c++/14.2.1/bits/uniform_int_dist.h \
+ /usr/include/c++/14.2.1/bits/ranges_algo.h \
+ /usr/include/c++/14.2.1/pstl/glue_algorithm_defs.h \
+ /usr/include/c++/14.2.1/cassert /usr/include/assert.h \
+ /usr/include/pqxx/connection.hxx /usr/include/c++/14.2.1/map \
+ /usr/include/c++/14.2.1/bits/stl_tree.h \
+ /usr/include/c++/14.2.1/bits/node_handle.h \
+ /usr/include/c++/14.2.1/bits/stl_map.h \
+ /usr/include/c++/14.2.1/bits/stl_multimap.h \
+ /usr/include/c++/14.2.1/bits/erase_if.h \
+ /usr/include/pqxx/errorhandler.hxx /usr/include/pqxx/types.hxx \
+ /usr/include/c++/14.2.1/iterator \
+ /usr/include/c++/14.2.1/bits/stream_iterator.h \
+ /usr/include/pqxx/except.hxx /usr/include/pqxx/internal/concat.hxx \
+ /usr/include/pqxx/strconv.hxx /usr/include/c++/14.2.1/charconv \
+ /usr/include/c++/14.2.1/limits /usr/include/c++/14.2.1/ranges \
+ /usr/include/c++/14.2.1/optional \
+ /usr/include/c++/14.2.1/bits/enable_special_members.h \
+ /usr/include/c++/14.2.1/span /usr/include/c++/14.2.1/array \
+ /usr/include/pqxx/util.hxx /usr/include/c++/14.2.1/functional \
+ /usr/include/c++/14.2.1/bits/std_function.h \
+ /usr/include/c++/14.2.1/unordered_map \
+ /usr/include/c++/14.2.1/bits/unordered_map.h \
+ /usr/include/c++/14.2.1/bits/hashtable.h \
+ /usr/include/c++/14.2.1/bits/hashtable_policy.h \
+ /usr/include/pqxx/version.hxx \
+ /usr/include/pqxx/internal/libpq-forward.hxx \
+ /usr/include/pqxx/internal/ignore-deprecated-pre.hxx \
+ /usr/include/pqxx/internal/ignore-deprecated-post.hxx \
+ /usr/include/pqxx/zview.hxx /usr/include/pqxx/internal/conversions.hxx \
+ /usr/include/c++/14.2.1/numeric \
+ /usr/include/c++/14.2.1/bits/stl_numeric.h \
+ /usr/include/c++/14.2.1/pstl/glue_numeric_defs.h \
+ /usr/include/c++/14.2.1/variant \
+ /usr/include/c++/14.2.1/bits/parse_numbers.h \
+ /usr/include/pqxx/params.hxx \
+ /usr/include/pqxx/internal/statement_parameters.hxx \
+ /usr/include/pqxx/binarystring.hxx /usr/include/pqxx/result.hxx \
+ /usr/include/pqxx/internal/encodings.hxx \
+ /usr/include/pqxx/internal/encoding_group.hxx \
+ /usr/include/pqxx/separated_list.hxx \
+ /usr/include/pqxx/internal/array-composite.hxx \
+ /usr/include/pqxx/blob.hxx /usr/include/c++/14.2.1/filesystem \
+ /usr/include/c++/14.2.1/bits/fs_fwd.h \
+ /usr/include/c++/14.2.1/bits/chrono.h /usr/include/c++/14.2.1/ratio \
+ /usr/include/c++/14.2.1/bits/fs_path.h /usr/include/c++/14.2.1/codecvt \
+ /usr/include/c++/14.2.1/bits/fs_dir.h \
+ /usr/include/c++/14.2.1/bits/fs_ops.h \
+ /usr/include/pqxx/dbtransaction.hxx \
+ /usr/include/pqxx/transaction_base.hxx \
+ /usr/include/pqxx/internal/stream_query.hxx \
+ /usr/include/pqxx/internal/gates/connection-stream_from.hxx \
+ /usr/include/pqxx/internal/callgate.hxx \
+ /usr/include/pqxx/internal/stream_iterator.hxx \
+ /usr/include/pqxx/transaction_focus.hxx /usr/include/pqxx/isolation.hxx \
+ /usr/include/pqxx/row.hxx /usr/include/pqxx/field.hxx \
+ /usr/include/pqxx/composite.hxx \
+ /usr/include/pqxx/internal/stream_query_impl.hxx \
+ /usr/include/pqxx/cursor.hxx /usr/include/pqxx/internal/sql_cursor.hxx \
+ /usr/include/pqxx/largeobject.hxx /usr/include/pqxx/nontransaction.hxx \
+ /usr/include/pqxx/transaction.hxx /usr/include/pqxx/notification.hxx \
+ /usr/include/pqxx/pipeline.hxx /usr/include/pqxx/prepared_statement.hxx \
+ /usr/include/pqxx/params.hxx /usr/include/pqxx/range.hxx \
+ /usr/include/pqxx/internal/result_iterator.hxx \
+ /usr/include/pqxx/internal/result_iter.hxx \
+ /usr/include/pqxx/robusttransaction.hxx \
+ /usr/include/pqxx/stream_from.hxx /usr/include/pqxx/stream_to.hxx \
+ /usr/include/pqxx/subtransaction.hxx /usr/include/pqxx/time.hxx \
+ /usr/include/c++/14.2.1/chrono /usr/include/c++/14.2.1/bits/chrono_io.h \
+ /usr/include/c++/14.2.1/format /usr/include/c++/14.2.1/bits/unicode.h \
+ /usr/include/c++/14.2.1/bits/unicode-data.h \
+ /usr/include/pqxx/transactor.hxx \
+ /usr/include/pqxx/internal/header-post.hxx

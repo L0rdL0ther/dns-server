@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/DnsServer.dir/src/main.cpp.o CMakeFiles/DnsServer.dir/src/header/dns.cpp.o -o DnsServer
+/usr/bin/c++ -g CMakeFiles/DnsServer.dir/src/main.cpp.o CMakeFiles/DnsServer.dir/src/header/dns.cpp.o -o DnsServer   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib /usr/lib/libboost_system.so.1.86.0 /usr/lib/libssl.so /usr/lib/libcrypto.so -lpthread -lpqxx
