@@ -11,7 +11,7 @@
 #define PORT 53
 #define MAXLINE 1024
 
-std::string conn_str = "host=postgres.local.saga.net.tr port=5432 dbname=bind_dns_manager user=root password=root";
+std::string conn_str = "";
 auto &db = postegre::Database::get_database(conn_str);
 
 
